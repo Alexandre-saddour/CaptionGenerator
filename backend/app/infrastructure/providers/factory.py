@@ -7,6 +7,7 @@ from app.domain.value_objects import ProviderName
 
 from .gemini_provider import GeminiProvider
 from .openai_provider import OpenAIProvider
+from .ollama_provider import OllamaProvider
 
 
 class ProviderFactory:
@@ -19,7 +20,7 @@ class ProviderFactory:
         
         Args:
             provider_name: Provider name (ProviderName enum or string)
-            api_key: API key for the provider
+            api_key: API key for the provider (or base URL for Ollama)
             
         Returns:
             AIProviderPort implementation
@@ -39,6 +40,8 @@ class ProviderFactory:
             return GeminiProvider(api_key)
         elif provider_name == ProviderName.OPENAI:
             return OpenAIProvider(api_key)
+        elif provider_name == ProviderName.OLLAMA:
+            return OllamaProvider(base_url=api_key) # api_key is base_url for Ollama
         else:
             # Should never reach here due to enum validation
             available = [p.value for p in ProviderName]

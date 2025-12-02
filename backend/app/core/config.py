@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # AI Provider Configuration
     gemini_api_key: Optional[str] = Field(default=None, description="Google Gemini API key")
     openai_api_key: Optional[str] = Field(default=None, description="OpenAI API key")
+    ollama_base_url: str = Field(default="http://localhost:11434", description="Ollama Base URL")
     default_ai_provider: str = Field(default="gemini", description="Default AI provider")
     
     # Application Configuration
@@ -52,8 +53,8 @@ class Settings(BaseSettings):
     @classmethod
     def validate_provider(cls, v: str) -> str:
         """Validate provider name."""
-        if v.lower() not in ["gemini", "openai"]:
-            raise ValueError("default_ai_provider must be 'gemini' or 'openai'")
+        if v.lower() not in ["gemini", "openai", "ollama"]:
+            raise ValueError("default_ai_provider must be 'gemini', 'openai' or 'ollama'")
         return v.lower()
     
     @property
@@ -79,6 +80,10 @@ class Settings(BaseSettings):
             providers.append("gemini")
         if self.openai_api_key:
             providers.append("openai")
+        # Ollama is always available if configured (default URL exists)
+        # In production, you might want to check if it's reachable, but for now we assume it is if the URL is set
+        if self.ollama_base_url:
+            providers.append("ollama")
         return providers
     
     def get_provider_key(self, provider: str) -> Optional[str]:
@@ -88,14 +93,16 @@ class Settings(BaseSettings):
             return self.gemini_api_key
         elif provider_lower == "openai":
             return self.openai_api_key
+        elif provider_lower == "ollama":
+            return self.ollama_base_url # Return base URL as "key" for factory
         return None
     
     def validate_providers(self) -> None:
         """Validate that at least one provider is configured."""
-        if not self.gemini_api_key and not self.openai_api_key:
+        if not self.gemini_api_key and not self.openai_api_key and not self.ollama_base_url:
             raise ValueError(
-                "At least one AI provider API key must be configured "
-                "(GEMINI_API_KEY or OPENAI_API_KEY)"
+                "At least one AI provider must be configured "
+                "(GEMINI_API_KEY, OPENAI_API_KEY, or OLLAMA_BASE_URL)"
             )
     
     @property

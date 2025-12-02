@@ -9,6 +9,7 @@ class ProviderName(str, Enum):
     
     GEMINI = "gemini"
     OPENAI = "openai"
+    OLLAMA = "ollama"
     
     @classmethod
     def from_string(cls, value: str) -> "ProviderName":

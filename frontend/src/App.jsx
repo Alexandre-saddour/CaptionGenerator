@@ -89,6 +89,7 @@ function App() {
       // Create FormData
       const formData = new FormData()
       formData.append('file', selectedImage)
+      formData.append('provider', "ollama")
       if (context.trim()) {
         formData.append('context', context.trim())
       }
