@@ -13,5 +13,3 @@ Upload an image and provide an optional text context/tone (e.g., *"humorous"*, *
 - **Long, professional descriptions** for *LinkedIn* or *blog posts*  
 - **A list of highly relevant hashtags**  
 - **A suggested Call-to-Action (CTA)**
-
-#### _Entirely vibe coded_
