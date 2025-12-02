@@ -94,7 +94,7 @@ function App() {
       }
 
       // Call backend API
-      const response = await fetch('http://localhost:8000/generate-caption', {
+      const response = await fetch('http://localhost:8000/api/v1/generate-caption', {
         method: 'POST',
         body: formData,
       })
